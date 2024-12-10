@@ -47,8 +47,8 @@ Player *create_player(SDL_Renderer *renderer) {
 
     LOG_INFO("Create the player animations\n");
 
-    player->x = 100;
-    player->y = 100;
+    player->x = 0;
+    player->y = 0;
     player->health = 100;
     player->mana = 100;
     player->speed = 5;
@@ -59,8 +59,8 @@ Player *create_player(SDL_Renderer *renderer) {
 
 
 void render_player(const Player *player, SDL_Renderer *renderer, const Camera *camera) {
-    const int render_x = (player->x - camera->x) * (int) camera->zoom;
-    const int render_y = (player->y - camera->y) * (int) camera->zoom;
+    const int render_x = (player->x - camera->x) * camera->zoom;
+    const int render_y = (player->y - camera->y) * camera->zoom;
     render_animation(player->animation[player->current_animation], renderer, render_x, render_y,
                      &camera->zoom, &camera->zoom, 0);
 }

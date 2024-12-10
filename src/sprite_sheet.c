@@ -115,8 +115,8 @@ void render_animation(const Animation *animation, SDL_Renderer *renderer, const 
     const int sprites_per_row = texture_width / animation->sprite_sheet->sprite_width;
 
     const SDL_Rect src_rect = {
-        animation->current_frame % sprites_per_row * animation->sprite_sheet->sprite_width,
-        animation->current_frame / sprites_per_row * animation->sprite_sheet->sprite_height,
+        (animation->current_frame % sprites_per_row) * animation->sprite_sheet->sprite_width,
+        (animation->current_frame / sprites_per_row) * animation->sprite_sheet->sprite_height,
         animation->sprite_sheet->sprite_width,
         animation->sprite_sheet->sprite_height,
     };
@@ -127,8 +127,8 @@ void render_animation(const Animation *animation, SDL_Renderer *renderer, const 
     const SDL_Rect dst_rect = {
         x,
         y,
-        (animation->sprite_sheet->sprite_width * (int) scale_x_val),
-        (animation->sprite_sheet->sprite_height * (int) scale_y_val),
+        (int)(animation->sprite_sheet->sprite_width * scale_x_val),
+             (int)(animation->sprite_sheet->sprite_height * scale_y_val),
     };
 
     SDL_RendererFlip flip_flag = SDL_FLIP_NONE;

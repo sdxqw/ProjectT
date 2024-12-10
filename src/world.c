@@ -71,7 +71,7 @@ World *create_world(SDL_Renderer *renderer) {
     int tile_indices[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     world->tile_grass = create_tile_set(world->sprite_sheet_grass, tile_indices, 11 * 7);
     world->world_info = create_world_info("assets/world.txt");
-    world->camera = create_camera(0, 0, 6.0f);
+    world->camera = create_camera(0, 0, 5.0f);
     return world;
 }
 
