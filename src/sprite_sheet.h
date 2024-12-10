@@ -45,9 +45,6 @@ void render_animation(const Animation *animation, SDL_Renderer *renderer, int x,
 void render_tile(const Tile *tile, SDL_Renderer *renderer, int x, int y, const float *scale_x, const float *scale_y,
                  int flipped);
 
-void render_tile_set(const TileSet *tile_set, SDL_Renderer *renderer, int x, int y, const float *scale_x,
-                     const float *scale_y, int flipped);
-
 void destroy_sprite_sheet(SpriteSheet *sprite_sheet);
 
 void destroy_animation(Animation *animation);

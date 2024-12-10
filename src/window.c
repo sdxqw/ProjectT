@@ -62,7 +62,7 @@ Window *create_window(WindowInfo *info) {
 void render_window(const Window *window) {
     SDL_SetRenderDrawColor(window->renderer, 0, 0, 0, 0);
     SDL_RenderClear(window->renderer);
-    render_world(window->renderer, window->world);
+    render_world(window->renderer, window->world, window->info->width, window->info->height);
     SDL_RenderPresent(window->renderer);
 }
 

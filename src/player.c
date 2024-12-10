@@ -58,10 +58,11 @@ Player *create_player(SDL_Renderer *renderer) {
 }
 
 
-void render_player(const Player *player, SDL_Renderer *renderer) {
-    const float new_player_size = 5.0f;
-    render_animation(player->animation[player->current_animation], renderer, player->x, player->y,
-                     &new_player_size, &new_player_size, 0);
+void render_player(const Player *player, SDL_Renderer *renderer, const Camera *camera) {
+    const int render_x = (player->x - camera->x) * (int) camera->zoom;
+    const int render_y = (player->y - camera->y) * (int) camera->zoom;
+    render_animation(player->animation[player->current_animation], renderer, render_x, render_y,
+                     &camera->zoom, &camera->zoom, 0);
 }
 
 void update_player(Player *player, const float delta_time) {
@@ -72,22 +73,27 @@ void update_player(Player *player, const float delta_time) {
         player->x += player->speed;
         player->current_animation = 7; // Walking right
         player->last_animation = 6;
-    } else if (state[SDL_SCANCODE_LEFT]) {
+    }
+    if (state[SDL_SCANCODE_LEFT]) {
         player->x -= player->speed;
         player->current_animation = 5; // Walking left
         player->last_animation = 4;
-    } else if (state[SDL_SCANCODE_UP]) {
+    }
+    if (state[SDL_SCANCODE_UP]) {
         player->y -= player->speed;
         player->current_animation = 3; // Walking up
         player->last_animation = 2;
-    } else if (state[SDL_SCANCODE_DOWN]) {
+    }
+    if (state[SDL_SCANCODE_DOWN]) {
         player->y += player->speed;
         player->current_animation = 1; // Walking down
         player->last_animation = 0;
-    } else {
-        player->current_animation = player->last_animation;
     }
 
+    if (!state[SDL_SCANCODE_RIGHT] && !state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_UP] && !state[
+            SDL_SCANCODE_DOWN]) {
+        player->current_animation = player->last_animation;
+    }
     update_animation(player->animation[player->current_animation], delta_time);
 }
 

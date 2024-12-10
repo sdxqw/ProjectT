@@ -1,10 +1,10 @@
 #include "world.h"
 
+#include <SDL_keyboard.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "window.h"
-
 
 WorldInfo *create_world_info(const char *path_to_file) {
     WorldInfo *world_info = malloc(sizeof(WorldInfo));
@@ -27,12 +27,15 @@ WorldInfo *create_world_info(const char *path_to_file) {
 
     char line[256];
     while (fgets(line, sizeof(line), file)) {
-        world_info->x = realloc(world_info->x, (world_info->count + 1) * sizeof(int));
-        world_info->y = realloc(world_info->y, (world_info->count + 1) * sizeof(int));
-        world_info->tile_index = realloc(world_info->tile_index, (world_info->count + 1) * sizeof(int));
+        int *new_x = realloc(world_info->x, (world_info->count + 1) * sizeof(int));
+        int *new_y = realloc(world_info->y, (world_info->count + 1) * sizeof(int));
+        int *new_tile_index = realloc(world_info->tile_index, (world_info->count + 1) * sizeof(int));
 
-        if (!world_info->x || !world_info->y || !world_info->tile_index) {
+        if (!new_x || !new_y || !new_tile_index) {
             LOG_ERROR("Failed to allocate memory for world info arrays\n");
+            free(new_x);
+            free(new_y);
+            free(new_tile_index);
             free(world_info->x);
             free(world_info->y);
             free(world_info->tile_index);
@@ -40,6 +43,10 @@ WorldInfo *create_world_info(const char *path_to_file) {
             fclose(file);
             return NULL;
         }
+
+        world_info->x = new_x;
+        world_info->y = new_y;
+        world_info->tile_index = new_tile_index;
 
         char *endptr = line;
         world_info->x[world_info->count] = strtol(endptr + 1, &endptr, 10); // Skip '['
@@ -64,23 +71,29 @@ World *create_world(SDL_Renderer *renderer) {
     int tile_indices[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     world->tile_grass = create_tile_set(world->sprite_sheet_grass, tile_indices, 11 * 7);
     world->world_info = create_world_info("assets/world.txt");
+    world->camera = create_camera(0, 0, 6.0f);
     return world;
 }
 
 
-void render_world(SDL_Renderer *renderer, const World *world) {
+void render_world(SDL_Renderer *renderer, const World *world, const int screen_width, const int screen_height) {
+    const SDL_Rect viewport = get_camera_viewport(world->camera, screen_width, screen_height);
+
     for (int i = 0; i < world->world_info->count; i++) {
-        const int x = world->world_info->x[i] * 16 * 4;
-        const int y = world->world_info->y[i] * 16 * 4;
-        const int tile_index = world->world_info->tile_index[i];
-        float new_size = 4.f;
-        render_tile(world->tile_grass->tiles[tile_index], renderer, x, y, &new_size, &new_size, 0);
+        const int x = (world->world_info->x[i] * 16 - viewport.x) * (int) world->camera->
+                      zoom;
+        const int y = (world->world_info->y[i] * 16 - viewport.y) * (int) world->camera->
+                      zoom;
+        render_tile(world->tile_grass->tiles[world->world_info->tile_index[i]], renderer, x, y, &world->camera->zoom,
+                    &world->camera->zoom,
+                    0);
     }
-    render_player(world->player, renderer);
+    render_player(world->player, renderer, world->camera); // Pass camera to render_player
 }
 
 void update_world(const float delta_time, const World *world) {
     update_player(world->player, delta_time);
+    look_at(world->camera, world->player->x, world->player->y, 800, 600);
 }
 
 void destroy_world(World *world) {

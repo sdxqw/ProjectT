@@ -142,7 +142,7 @@ void render_animation(const Animation *animation, SDL_Renderer *renderer, const 
 }
 
 void render_tile(const Tile *tile, SDL_Renderer *renderer, int x, int y, const float *scale_x, const float *scale_y,
-                 int flipped) {
+                 const int flipped) {
     int texture_width, texture_height;
     SDL_QueryTexture(tile->sprite_sheet->texture, NULL, NULL, &texture_width, &texture_height);
 
@@ -174,16 +174,6 @@ void render_tile(const Tile *tile, SDL_Renderer *renderer, int x, int y, const f
 
     SDL_RenderCopyEx(renderer, tile->sprite_sheet->texture, &src_rect, &dst_rect, 0, NULL, flip_flag);
 }
-
-void render_tile_set(const TileSet *tile_set, SDL_Renderer *renderer, const int x, const int y, const float *scale_x,
-                     const float *scale_y, const int flipped) {
-    for (int i = 0; i < tile_set->tile_count; i++) {
-        int tile_x = x + tile_set->tiles[i]->tile_index % 11 * tile_set->sprite_sheet->sprite_width;
-        int tile_y = y + tile_set->tiles[i]->tile_index / 11 * tile_set->sprite_sheet->sprite_height;
-        render_tile(tile_set->tiles[i], renderer, tile_x, tile_y, scale_x, scale_y, flipped);
-    }
-}
-
 
 void destroy_sprite_sheet(SpriteSheet *sprite_sheet) {
     if (sprite_sheet) {

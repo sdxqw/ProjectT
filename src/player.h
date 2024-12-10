@@ -1,4 +1,5 @@
 #pragma once
+#include "camera.h"
 #include "sprite_sheet.h"
 
 typedef struct {
@@ -14,7 +15,7 @@ typedef struct {
 
 Player *create_player(SDL_Renderer *renderer);
 
-void render_player(const Player *player, SDL_Renderer *renderer);
+void render_player(const Player *player, SDL_Renderer *renderer, const Camera *camera);
 
 void update_player(Player *player, float delta_time);
 

@@ -3,31 +3,6 @@ project(ProjectT C)
 
 set(CMAKE_C_STANDARD 17)
 
-# Set SDL2 paths based on the platform
-if (WIN32)
-    set(SDL2_BIN "bin/x64/")
-    set(SDL2_LIB "lib/x64/")
-    set(SDL2_INCLUDE "include/SDL2")
-elseif (APPLE)
-    find_package(SDL2 REQUIRED)
-    find_package(SDL2_image REQUIRED)
-    set(SDL2_INCLUDE ${SDL2_INCLUDE_DIRS})
-    set(SDL2_LIB ${SDL2_LIBRARIES})
-elseif (UNIX)
-    find_package(SDL2 REQUIRED)
-    find_package(SDL2_image REQUIRED)
-    set(SDL2_INCLUDE ${SDL2_INCLUDE_DIRS})
-    set(SDL2_LIB ${SDL2_LIBRARIES})
-endif ()
-
-include_directories(${SDL2_INCLUDE})
-link_directories(${SDL2_LIB})
-
-# Copy bin over to cmake build (Windows only)
-if (WIN32)
-    file(COPY ${SDL2_BIN} DESTINATION ${CMAKE_BINARY_DIR})
-endif ()
-
 # Include assets inside the exe
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
@@ -40,9 +15,31 @@ add_executable(ProjectT src/main.c
         src/sprite_sheet.c
         src/world.h
         src/world.c
+        src/camera.h
+        src/camera.c
 )
 
-target_link_libraries(ProjectT SDL2main SDL2 SDL2_image)
+include(cmake/CPM.cmake)
+
+CPMAddPackage(
+        NAME SDL2
+        GITHUB_REPOSITORY libsdl-org/SDL
+        GIT_TAG release-2.30.10
+        GIT_SHALLOW TRUE
+)
+CPMAddPackage(
+        NAME SDL_image
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+        GIT_TAG release-2.8.2
+        GIT_SHALLOW TRUE
+)
+
+# Include directories for SDL2 and SDL2_image
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
+
+target_link_libraries(ProjectT SDL2::SDL2 SDL2_image::SDL2_image
+        SDL2::SDL2main
+)
 
 # Set optimization flags
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
