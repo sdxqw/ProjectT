@@ -3,6 +3,7 @@
 #include <SDL_video.h>
 
 #include "player.h"
+#include "world.h"
 
 #define LOG_INFO(...) fprintf(stdout, __VA_ARGS__)
 #define LOG_ERROR(...) fprintf(stderr, __VA_ARGS__)
@@ -17,7 +18,7 @@ typedef struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
     WindowInfo *info;
-    Player *player;
+    World *world;
 } Window;
 
 Window *create_window(WindowInfo *info);

@@ -45,9 +45,9 @@ Window *create_window(WindowInfo *info) {
     }
     LOG_INFO("Initialized SDL_image\n");
 
-    window->player = create_player(window->renderer);
-    if (!window->player) {
-        LOG_ERROR("Failed to create player\n");
+    window->world = create_world(window->renderer);
+    if (!window->world) {
+        LOG_ERROR("Failed to create the world\n");
         destroy_window(window);
         return NULL;
     }
@@ -62,7 +62,7 @@ Window *create_window(WindowInfo *info) {
 void render_window(const Window *window) {
     SDL_SetRenderDrawColor(window->renderer, 0, 0, 0, 0);
     SDL_RenderClear(window->renderer);
-    render_player(window->player, window->renderer);
+    render_world(window->renderer, window->world);
     SDL_RenderPresent(window->renderer);
 }
 
@@ -75,7 +75,7 @@ void update_window(const Window *window) {
             if (e.type == SDL_QUIT) running = 0;
         }
 
-        update_player(window->player, delta_time);
+        update_world(delta_time, window->world);
         render_window(window);
         SDL_Delay(16);
     }
@@ -92,9 +92,9 @@ void destroy_window(Window *window) {
             SDL_DestroyRenderer(window->renderer);
             LOG_INFO("Destroyed the renderer FROM WINDOW\n");
         }
-        if (window->player) {
-            destroy_player(window->player);
-            LOG_INFO("Destroyed the player FROM WINDOW\n");
+        if (window->world) {
+            destroy_world(window->world);
+            LOG_INFO("Destroyed the world FROM WINDOW\n");
         }
         free(window);
         LOG_INFO("Destroyed the window\n");

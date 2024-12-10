@@ -37,7 +37,10 @@ add_executable(ProjectT src/main.c
         src/player.h
         src/player.c
         src/sprite_sheet.h
-        src/sprite_sheet.c)
+        src/sprite_sheet.c
+        src/world.h
+        src/world.c
+)
 
 target_link_libraries(ProjectT SDL2main SDL2 SDL2_image)
 

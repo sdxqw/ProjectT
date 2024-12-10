@@ -60,8 +60,8 @@ Player *create_player(SDL_Renderer *renderer) {
 
 void render_player(const Player *player, SDL_Renderer *renderer) {
     const float new_player_size = 5.0f;
-    render_sprite_sheet_as_animation(player->animation[player->current_animation], renderer, player->x, player->y,
-                                     &new_player_size, &new_player_size, 0);
+    render_animation(player->animation[player->current_animation], renderer, player->x, player->y,
+                     &new_player_size, &new_player_size, 0);
 }
 
 void update_player(Player *player, const float delta_time) {
