@@ -86,6 +86,15 @@ TileSet *create_tile_set(SpriteSheet *sprite_sheet, int *tile_indices, int tile_
     }
     for (int i = 0; i < tile_count; i++) {
         tile_set->tiles[i] = create_tile(sprite_sheet, tile_indices[i]);
+        if (!tile_set->tiles[i]) {
+            LOG_ERROR("Failed to create tile at index %d\n", i);
+            for (int j = 0; j < i; j++) {
+                free(tile_set->tiles[j]);
+            }
+            free(tile_set->tiles);
+            free(tile_set);
+            return NULL;
+        }
     }
     tile_set->tile_count = tile_count;
     return tile_set;

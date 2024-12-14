@@ -91,9 +91,9 @@ void render_world(SDL_Renderer *renderer, const World *world, const int screen_w
     render_player(world->player, renderer, world->camera); // Pass camera to render_player
 }
 
-void update_world(const float delta_time, const World *world) {
+void update_world(const float delta_time, const World *world, int screen_width, int screen_height) {
     update_player(world->player, delta_time);
-    look_at(world->camera, world->player->x, world->player->y, 800, 600);
+    look_at(world->camera, world->player->x, world->player->y, screen_width, screen_height);
 }
 
 void destroy_world(World *world) {

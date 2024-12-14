@@ -75,7 +75,7 @@ void update_window(const Window *window) {
             if (e.type == SDL_QUIT) running = 0;
         }
 
-        update_world(delta_time, window->world);
+        update_world(delta_time, window->world, window->info->width, window->info->height);
         render_window(window);
         SDL_Delay(16);
     }

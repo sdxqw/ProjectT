@@ -37,6 +37,13 @@ CPMAddPackage(
 # Include directories for SDL2 and SDL2_image
 include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
 
+# Copy DLLs to the binary directory
+add_custom_command(TARGET ProjectT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_BINARY_DIR}/_deps/sdl2-build/SDL2d.dll $<TARGET_FILE_DIR:ProjectT>
+        ${CMAKE_BINARY_DIR}/_deps/sdl_image-build/SDL2_imaged.dll $<TARGET_FILE_DIR:ProjectT>
+)
+
 target_link_libraries(ProjectT SDL2::SDL2 SDL2_image::SDL2_image
         SDL2::SDL2main
 )
@@ -48,8 +55,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
 
     # Set WIN32 subsystem for Windows to prevent console window
     if (WIN32)
-        set_target_properties(ProjectT PROPERTIES WIN31_EXECUTABLE TRUE)
+        set_target_properties(ProjectT PROPERTIES WIN32_EXECUTABLE TRUE)
     endif ()
 endif ()
-
-

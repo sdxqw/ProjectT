@@ -25,8 +25,8 @@ void update_camera(Camera *camera, const int x, const int y, const float zoom) {
 
 void look_at(Camera *camera, const int x, const int y, const int screen_width, const int screen_height) {
     if (camera) {
-        camera->x = x - (screen_width / 2) / camera->zoom;
-        camera->y = y - (screen_height / 2) / camera->zoom;
+        camera->x = x - (screen_width / 3) / camera->zoom;
+        camera->y = y - (screen_height / 3) / camera->zoom;
     }
 }
 

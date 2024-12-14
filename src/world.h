@@ -23,6 +23,6 @@ WorldInfo *create_world_info(const char *path_to_file);
 
 void render_world(SDL_Renderer *renderer, const World *world, int screen_width, int screen_height);
 
-void update_world(float delta_time, const World *world);
+void update_world(float delta_time, const World *world, int screen_width, int screen_height);
 
 void destroy_world(World *world);
